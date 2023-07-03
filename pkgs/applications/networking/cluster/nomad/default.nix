@@ -77,4 +77,14 @@ rec {
       export PATH="$PATH:/build/go/bin"
     '';
   };
+  nomad_1_6 = generic {
+    buildGoModule = buildGo120Module;
+    version = "1.6.0-beta.1";
+    sha256 = "sha256-8m0ng6i+JlgJKuzpce3gckrKVXNmjTiMCki1+N/FAKE=";
+    vendorSha256 = "sha256-RqSabARrCjIjkncWcQUF/WcTd65N2kkbSTlZkMwFAKE=";
+    passthru.tests.nomad = nixosTests.nomad;
+    preCheck = ''
+      export PATH="$PATH:/build/go/bin"
+    '';
+  };
 }
