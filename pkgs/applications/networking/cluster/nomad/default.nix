@@ -19,7 +19,7 @@ let
       src = fetchFromGitHub {
         owner = "hashicorp";
         repo = pname;
-        rev = "v${version}";
+        rev = "${version}";
         inherit sha256;
       };
 
@@ -48,28 +48,28 @@ rec {
 
   nomad_1_2 = generic {
     buildGoModule = buildGo120Module;
-    version = "1.2.16";
+    version = "v1.2.16";
     sha256 = "sha256-fhfUpcG91EgIzJ4mCS7geyIJyTSHS2e8t4yYiI3PqpQ=";
     vendorSha256 = "sha256-kwCDsGFw+25Mimgt/cTK/Z2H7Qh5n4rjr3kIBvjcPL8=";
   };
 
   nomad_1_3 = generic {
     buildGoModule = buildGo120Module;
-    version = "1.3.9";
+    version = "v1.3.9";
     sha256 = "sha256-xfoIzLDG/OfqAPQqeLvQZ11uESWFNyOyLP6Imi+S96w=";
     vendorSha256 = "sha256-kW0goicoM1lM1NEHPTfozg2EKR1daf33UxT/mVabyfY=";
   };
 
   nomad_1_4 = generic {
     buildGoModule = buildGo120Module;
-    version = "1.4.6";
+    version = "v1.4.6";
     sha256 = "sha256-l4GvQIS5JSSgjBjPivAKAb7gKlVLw4WoZpPR8LxnLNc=";
     vendorSha256 = "sha256-05BhKF6kx0wbu74cidpTFhUN668R/AxV6qWmchCm/WE=";
     passthru.tests.nomad = nixosTests.nomad;
   };
   nomad_1_5 = generic {
     buildGoModule = buildGo120Module;
-    version = "1.5.6";
+    version = "v1.5.6";
     sha256 = "sha256-eFzGaTJ9BcK5F10lkTKB3sNaGZsmZ0BbPZI6kT5ZUpo=";
     vendorSha256 = "sha256-tOUQr44wUhhCccvj4dCI7fvLMrKaEX7xY7035Q3wU3M=";
     passthru.tests.nomad = nixosTests.nomad;
@@ -80,7 +80,7 @@ rec {
 
   nomad_1_6 = generic {
     buildGoModule = buildGo120Module;
-    version = "1.6.0-beta.1";
+    version = "17f63cf";
     sha256 = "sha256-TDeJnhr39SnDoB/CmGTU+cpEifm8hJ2lDmFk6vxx2Yc=";
     vendorSha256 = "sha256-uCa8yJGX2lqf/NLPxo2qFRN4er854xgPyDFFM8aYWGo=";
     passthru.tests.nomad = nixosTests.nomad;
