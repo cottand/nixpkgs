@@ -80,8 +80,8 @@ rec {
 
   nomad_1_6 = generic {
     buildGoModule = buildGo120Module;
-    version = "v1.6.0-rc.1";
-    sha256 = "sha256-41Byjp6pofK6nQTaEdYeG/tzxTZjREYvQiWHPKGdOL4=";
+    version = "v1.6.0";
+    sha256 = "sha256-979SlqBu2/kUdPB4BplhOcEq0J2sjKmFkEiLOzOAUPM=";
     vendorSha256 = "sha256-Y3O7ADzZPlLWFbXSYBcI6b5MAhMD0UnkhQxO9VJMpOY=";
     passthru.tests.nomad = nixosTests.nomad;
     preCheck = ''
