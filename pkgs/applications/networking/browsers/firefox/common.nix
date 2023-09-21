@@ -55,6 +55,7 @@
 , gnum4
 , gtk3
 , icu
+, icu72
 , libGL
 , libGLU
 , libevent
@@ -186,7 +187,6 @@ let
       # These values are exposed through telemetry
       "app.distributor" = "nixos";
       "app.distributor.channel" = "nixpkgs";
-      "app.partner.nixos" = "nixos";
     };
   });
 
@@ -427,7 +427,6 @@ buildStdenv.mkDerivation ({
     freetype
     glib
     gtk3
-    icu
     libffi
     libGL
     libGLU
@@ -455,6 +454,9 @@ buildStdenv.mkDerivation ({
     zip
     zlib
   ]
+  # icu73 changed how it follows symlinks which breaks in the firefox sandbox
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1839287
+  ++ [ (if (lib.versionAtLeast version "115") then icu else icu72) ]
   ++ [ (if (lib.versionAtLeast version "103") then nss_latest else nss_esr) ]
   ++ lib.optional  alsaSupport alsa-lib
   ++ lib.optional  jackSupport libjack2

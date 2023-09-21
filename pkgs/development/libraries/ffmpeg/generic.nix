@@ -82,7 +82,7 @@
 , withSvtav1 ? withFullDeps && !stdenv.isAarch64 # AV1 encoder/decoder (focused on speed and correctness)
 , withTensorflow ? false # Tensorflow dnn backend support
 , withTheora ? withHeadlessDeps # Theora encoder
-, withV4l2 ? withFullDeps && !stdenv.isDarwin # Video 4 Linux support
+, withV4l2 ? withHeadlessDeps && !stdenv.isDarwin # Video 4 Linux support
 , withV4l2M2m ? withV4l2
 , withVaapi ? withHeadlessDeps && (with stdenv; isLinux || isFreeBSD) # Vaapi hardware acceleration
 , withVdpau ? withSmallDeps # Vdpau hardware acceleration
@@ -126,7 +126,6 @@
 , withMultithread ? true # Multithreading via pthreads/win32 threads
 , withNetwork ? withHeadlessDeps # Network support
 , withPixelutils ? withHeadlessDeps # Pixel utils in libavutil
-, withLTO ? false # build with link-time optimization
 /*
  *  Program options
  */
@@ -384,7 +383,6 @@ stdenv.mkDerivation (finalAttrs: {
 
     (enableFeature withSmallBuild "small")
     (enableFeature withRuntimeCPUDetection "runtime-cpudetect")
-    (enableFeature withLTO "lto")
     (enableFeature withGrayscale "gray")
     (enableFeature withSwscaleAlpha "swscale-alpha")
     (enableFeature withHardcodedTables "hardcoded-tables")

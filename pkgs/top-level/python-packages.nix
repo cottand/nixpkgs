@@ -528,8 +528,6 @@ self: super: with self; {
 
   aocd = callPackage ../development/python-modules/aocd { };
 
-  apache-airflow = callPackage ../development/python-modules/apache-airflow { };
-
   apache-beam = callPackage ../development/python-modules/apache-beam { };
 
   apcaccess = callPackage ../development/python-modules/apcaccess { };
@@ -1437,6 +1435,8 @@ self: super: with self; {
 
   boschshcpy = callPackage ../development/python-modules/boschshcpy { };
 
+  bottombar = callPackage ../development/python-modules/bottombar { };
+
   boost-histogram = callPackage ../development/python-modules/boost-histogram {
     inherit (pkgs) boost;
   };
@@ -1857,6 +1857,8 @@ self: super: with self; {
 
   clickclick = callPackage ../development/python-modules/clickclick { };
 
+  click-aliases = callPackage ../development/python-modules/click-aliases { };
+
   click-command-tree = callPackage ../development/python-modules/click-command-tree { };
 
   click-completion = callPackage ../development/python-modules/click-completion { };
@@ -2085,6 +2087,8 @@ self: super: with self; {
 
   coreapi = callPackage ../development/python-modules/coreapi { };
 
+  coredis = callPackage ../development/python-modules/coredis { };
+
   coreschema = callPackage ../development/python-modules/coreschema { };
 
   cornice = callPackage ../development/python-modules/cornice { };
@@ -2170,6 +2174,8 @@ self: super: with self; {
   crysp = callPackage ../development/python-modules/crysp { };
 
   crytic-compile = callPackage ../development/python-modules/crytic-compile { };
+
+  cson  = callPackage ../development/python-modules/cson { };
 
   csrmesh  = callPackage ../development/python-modules/csrmesh { };
 
@@ -3317,8 +3323,6 @@ self: super: with self; {
   eufylife-ble-client = callPackage ../development/python-modules/eufylife-ble-client { };
 
   evaluate = callPackage ../development/python-modules/evaluate { };
-
-  ev3dev2 = callPackage ../development/python-modules/ev3dev2 { };
 
   evdev = callPackage ../development/python-modules/evdev { };
 
@@ -6900,6 +6904,8 @@ self: super: with self; {
 
   py-eth-sig-utils = callPackage ../development/python-modules/py-eth-sig-utils { };
 
+  py-radix-sr = callPackage ../development/python-modules/py-radix-sr { };
+
   nwdiag = callPackage ../development/python-modules/nwdiag { };
 
   oasatelematics = callPackage ../development/python-modules/oasatelematics { };
@@ -7726,6 +7732,8 @@ self: super: with self; {
   python-heatclient = callPackage ../development/python-modules/python-heatclient { };
 
   python-ipmi = callPackage ../development/python-modules/python-ipmi { };
+
+  python-ipware = callPackage ../development/python-modules/python-ipware { };
 
   python-ironicclient = callPackage ../development/python-modules/python-ironicclient { };
 
@@ -9738,6 +9746,8 @@ self: super: with self; {
 
   python-ethtool = callPackage ../development/python-modules/python-ethtool { };
 
+  python-ev3dev2 = callPackage ../development/python-modules/python-ev3dev2 { };
+
   python_fedora = callPackage ../development/python-modules/python_fedora { };
 
   python-fontconfig = callPackage ../development/python-modules/python-fontconfig { };
@@ -10550,6 +10560,8 @@ self: super: with self; {
 
   rich = callPackage ../development/python-modules/rich { };
 
+  rich-argparse = callPackage ../development/python-modules/rich-argparse { };
+
   rich-argparse-plus = callPackage ../development/python-modules/rich-argparse-plus { };
 
   rich-click = callPackage ../development/python-modules/rich-click { };
@@ -11355,6 +11367,8 @@ self: super: with self; {
 
   speedtest-cli = callPackage ../development/python-modules/speedtest-cli { };
 
+  speg = callPackage ../development/python-modules/speg { };
+
   spglib = callPackage ../development/python-modules/spglib { };
 
   sphfile = callPackage ../development/python-modules/sphfile { };
@@ -12053,6 +12067,8 @@ self: super: with self; {
 
   tika = callPackage ../development/python-modules/tika { };
 
+  tika-client = callPackage ../development/python-modules/tika-client { };
+
   tiktoken = callPackage ../development/python-modules/tiktoken { };
 
   tikzplotlib = callPackage ../development/python-modules/tikzplotlib { };
@@ -12683,6 +12699,8 @@ self: super: with self; {
   varint = callPackage ../development/python-modules/varint { };
 
   vat-moss = callPackage ../development/python-modules/vat-moss { };
+
+  vcard = callPackage ../development/python-modules/vcard { };
 
   vcrpy = callPackage ../development/python-modules/vcrpy { };
 

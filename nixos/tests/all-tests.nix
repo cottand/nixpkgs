@@ -251,6 +251,7 @@ in {
   etebase-server = handleTest ./etebase-server.nix {};
   etesync-dav = handleTest ./etesync-dav.nix {};
   evcc = handleTest ./evcc.nix {};
+  fakeroute = handleTest ./fakeroute.nix {};
   fancontrol = handleTest ./fancontrol.nix {};
   fcitx5 = handleTest ./fcitx5 {};
   fenics = handleTest ./fenics.nix {};
@@ -259,7 +260,7 @@ in {
   firefox-beta = handleTest ./firefox.nix { firefoxPackage = pkgs.firefox-beta; };
   firefox-devedition = handleTest ./firefox.nix { firefoxPackage = pkgs.firefox-devedition; };
   firefox-esr    = handleTest ./firefox.nix { firefoxPackage = pkgs.firefox-esr; }; # used in `tested` job
-  firefox-esr-102 = handleTest ./firefox.nix { firefoxPackage = pkgs.firefox-esr-102; };
+  firefox-esr-115 = handleTest ./firefox.nix { firefoxPackage = pkgs.firefox-esr-115; };
   firejail = handleTest ./firejail.nix {};
   firewall = handleTest ./firewall.nix { nftables = false; };
   firewall-nftables = handleTest ./firewall.nix { nftables = true; };
@@ -502,6 +503,7 @@ in {
   networking.scripted = handleTest ./networking.nix { networkd = false; };
   netbox = handleTest ./web-apps/netbox.nix { inherit (pkgs) netbox; };
   netbox_3_3 = handleTest ./web-apps/netbox.nix { netbox = pkgs.netbox_3_3; };
+  netbox-upgrade = handleTest ./web-apps/netbox-upgrade.nix {};
   # TODO: put in networking.nix after the test becomes more complete
   networkingProxy = handleTest ./networking-proxy.nix {};
   nextcloud = handleTest ./nextcloud {};
@@ -554,6 +556,7 @@ in {
   openstack-image-metadata = (handleTestOn ["x86_64-linux"] ./openstack-image.nix {}).metadata or {};
   openstack-image-userdata = (handleTestOn ["x86_64-linux"] ./openstack-image.nix {}).userdata or {};
   opentabletdriver = handleTest ./opentabletdriver.nix {};
+  opentelemetry-collector = handleTest ./opentelemetry-collector.nix {};
   owncast = handleTest ./owncast.nix {};
   image-contents = handleTest ./image-contents.nix {};
   openvscode-server = handleTest ./openvscode-server.nix {};

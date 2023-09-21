@@ -67,21 +67,23 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "gnome-shell";
-  version = "44.1";
+  version = "44.2";
 
   outputs = [ "out" "devdoc" ];
 
   src = fetchurl {
     url = "mirror://gnome/sources/gnome-shell/${lib.versions.major version}/${pname}-${version}.tar.xz";
-    sha256 = "C/vkOU0mdiUVTQjQFGe9vZnoFXUS/I30XVwC3bdVHKY=";
+    sha256 = "VfJ57GMDt8DIkkbs7YEkfIf8HHOUj0XrISpkchjRtj8=";
   };
 
   patches = [
     # Hardcode paths to various dependencies so that they can be found at runtime.
     (substituteAll {
       src = ./fix-paths.patch;
-      inherit libgnomekbd unzip;
+      gkbd_keyboard_display = "${lib.getBin libgnomekbd}/bin/gkbd-keyboard-display";
+      glib_compile_schemas = "${glib.dev}/bin/glib-compile-schemas";
       gsettings = "${glib.bin}/bin/gsettings";
+      unzip = "${lib.getBin unzip}/bin/unzip";
     })
 
     # Use absolute path for libshew installation to make our patched gobject-introspection

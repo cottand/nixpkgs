@@ -1,5 +1,5 @@
 { lib, stdenv, buildPackages, runCommand, nettools, bc, bison, flex, perl, rsync, gmp, libmpc, mpfr, openssl
-, libelf, cpio, elfutils, zstd, python3Minimal, zlib, pahole
+, libelf, cpio, elfutils, zstd, python3Minimal, zlib, pahole, ubootTools, kmod
 , fetchpatch
 }:
 
@@ -100,13 +100,14 @@ stdenv.mkDerivation ({
   inherit version src;
 
   depsBuildBuild = [ buildPackages.stdenv.cc ];
-  nativeBuildInputs = [ perl bc nettools openssl rsync gmp libmpc mpfr zstd python3Minimal ]
-      ++ optional  (kernelConf.target == "uImage") buildPackages.ubootTools
-      ++ optional  (lib.versionOlder version "5.8") libelf
-      ++ optionals (lib.versionAtLeast version "4.16") [ bison flex ]
-      ++ optionals (lib.versionAtLeast version "5.2")  [ cpio pahole zlib ]
-      ++ optional  (lib.versionAtLeast version "5.8")  elfutils
-      ;
+  nativeBuildInputs = [
+    bc gmp libmpc mpfr nettools openssl perl python3Minimal rsync ubootTools
+    zstd
+  ] ++ optional  (lib.versionOlder version "5.8") libelf
+    ++ optionals (lib.versionAtLeast version "4.16") [ bison flex ]
+    ++ optionals (lib.versionAtLeast version "5.2")  [ cpio pahole zlib ]
+    ++ optional  (lib.versionAtLeast version "5.8")  elfutils
+    ++ optional  (lib.versionAtLeast version "6.6")  kmod;
 
   patches =
     map (p: p.patch) kernelPatches
@@ -308,7 +309,7 @@ stdenv.mkDerivation ({
     make modules_install $makeFlags "''${makeFlagsArray[@]}" \
       $installFlags "''${installFlagsArray[@]}"
     unlink $out/lib/modules/${modDirVersion}/build
-    unlink $out/lib/modules/${modDirVersion}/source
+    rm -f $out/lib/modules/${modDirVersion}/source
 
     mkdir $dev/lib/modules/${modDirVersion}/build
 
@@ -405,6 +406,9 @@ stdenv.mkDerivation ({
       maintainers.thoughtpolice
     ];
     platforms = platforms.linux;
+    badPlatforms =
+      lib.optionals (lib.versionOlder version "4.15") [ "riscv32-linux" "riscv64-linux" ] ++
+      lib.optional (lib.versionOlder version "5.19") "loongarch64-linux";
     timeout = 14400; # 4 hours
   } // extraMeta;
 } // optionalAttrs (pos != null) {

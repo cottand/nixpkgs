@@ -220,12 +220,17 @@ let
 
 in {
 
-
+  # If you do upgrade here, please update in pkgs/top-level/release.nix
+  # the permitted insecure version to ensure it gets cached for our users
+  # and backport this to stable release (23.05).
   openssl_1_1 = common {
-    version = "1.1.1u";
-    sha256 = "sha256-4vjYS1I+7NBse+diaDA3AwD7zBU4a/UULXJ1j2lj68Y=";
+    version = "1.1.1v";
+    sha256 = "sha256-1ml+KHHncjhGBALpNi1H0YOCsV758karpse9eA04prA=";
     patches = [
       ./1.1/nix-ssl-cert-file.patch
+
+      # https://www.openssl.org/news/secadv/20230908.txt
+      ./1.1/CVE-2023-4807.patch
 
       (if stdenv.hostPlatform.isDarwin
        then ./use-etc-ssl-certs-darwin.patch
@@ -240,8 +245,8 @@ in {
   };
 
   openssl_3 = common {
-    version = "3.0.8";
-    sha256 = "sha256-bBPSvzj98x6sPOKjRwc2c/XWMmM5jx9p0N9KQSU+Sz4=";
+    version = "3.0.10";
+    sha256 = "sha256-F2HU9bE6ECi5tvPUuOF/6wztyTcPav5h1xk9LNzoMyM=";
     patches = [
       ./3.0/nix-ssl-cert-file.patch
 

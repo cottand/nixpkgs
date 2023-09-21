@@ -1,4 +1,5 @@
 { newScope, config, stdenv, fetchurl, makeWrapper
+, buildPackages
 , llvmPackages_16
 , ed, gnugrep, coreutils, xdg-utils
 , glib, gtk3, gtk4, gnome, gsettings-desktop-schemas, gn, fetchgit
@@ -21,11 +22,11 @@ let
   llvmPackages = llvmPackages_16;
   stdenv = llvmPackages.stdenv;
 
-  upstream-info = (lib.importJSON ./upstream-info.json).${channel};
+  upstream-info = (import ./upstream-info.nix).${channel};
 
   # Helper functions for changes that depend on specific versions:
   warnObsoleteVersionConditional = min-version: result:
-    let ungoogled-version = (lib.importJSON ./upstream-info.json).ungoogled-chromium.version;
+    let ungoogled-version = (import ./upstream-info.nix).ungoogled-chromium.version;
     in lib.warnIf
          (lib.versionAtLeast ungoogled-version min-version)
          "chromium: ungoogled version ${ungoogled-version} is newer than a conditional bounded at ${min-version}. You can safely delete it."
@@ -47,7 +48,7 @@ let
       inherit channel chromiumVersionAtLeast versionRange;
       inherit proprietaryCodecs
               cupsSupport pulseSupport ungoogled;
-      gnChromium = gn.overrideAttrs (oldAttrs: {
+      gnChromium = buildPackages.gn.overrideAttrs (oldAttrs: {
         inherit (upstream-info.deps.gn) version;
         src = fetchgit {
           inherit (upstream-info.deps.gn) url rev sha256;
@@ -70,10 +71,10 @@ let
       # Use the latest stable Chrome version if necessary:
       version = if chromium.upstream-info.sha256bin64 != null
         then chromium.upstream-info.version
-        else (lib.importJSON ./upstream-info.json).stable.version;
+        else (import ./upstream-info.nix).stable.version;
       sha256 = if chromium.upstream-info.sha256bin64 != null
         then chromium.upstream-info.sha256bin64
-        else (lib.importJSON ./upstream-info.json).stable.sha256bin64;
+        else (import ./upstream-info.nix).stable.sha256bin64;
     in fetchurl {
       urls = map (repo: "${repo}/${pkgName}/${pkgName}_${version}-1_amd64.deb") [
         "https://dl.google.com/linux/chrome/deb/pool/main/g"
@@ -134,13 +135,9 @@ let
     };
   };
 
-  suffix = if (channel == "stable" || channel == "ungoogled-chromium")
-    then ""
-    else "-" + channel;
+  suffix = lib.optionalString (channel != "stable" && channel != "ungoogled-chromium") ("-" + channel);
 
   sandboxExecutableName = chromium.browser.passthru.sandboxExecutableName;
-
-  version = chromium.browser.version;
 
   # We want users to be able to enableWideVine without rebuilding all of
   # chromium, so we have a separate derivation here that copies chromium
@@ -158,7 +155,7 @@ let
 in stdenv.mkDerivation {
   pname = lib.optionalString ungoogled "ungoogled-"
     + "chromium${suffix}";
-  inherit version;
+  inherit (chromium.browser) version;
 
   nativeBuildInputs = [
     makeWrapper ed
@@ -237,3 +234,9 @@ in stdenv.mkDerivation {
     inherit chromeSrc sandboxExecutableName;
   };
 }
+# the following is a complicated and long-winded variant of
+# `inherit (chromium.browser) version`, with the added benefit
+# that it keeps the pointer to upstream-info.nix for
+# builtins.unsafeGetAttrPos, which is what ofborg uses to
+# decide which maintainers need to be pinged.
+// builtins.removeAttrs chromium.browser (builtins.filter (e: e != "version") (builtins.attrNames chromium.browser))

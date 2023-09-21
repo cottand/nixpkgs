@@ -9,6 +9,7 @@
 , python3, perl
 , which
 , llvmPackages
+, rustc
 # postPatch:
 , pkgsBuildHost
 # configurePhase:
@@ -155,7 +156,6 @@ let
       curl
       libepoxy
       libffi
-    ] ++ lib.optionals (chromiumVersionAtLeast "114") [
       libevdev
     ] ++ lib.optional systemdSupport systemd
       ++ lib.optionals cupsSupport [ libgcrypt cups ]
@@ -170,7 +170,6 @@ let
       # (we currently package 1.26 in Nixpkgs while Chromium bundles 1.21):
       # Source: https://bugs.chromium.org/p/angleproject/issues/detail?id=7582#c1
       ./patches/angle-wayland-include-protocol.patch
-    ] ++ lib.optionals (chromiumVersionAtLeast "114") [
       # We need to revert this patch to build M114+ with LLVM 16:
       (githubPatch {
         # Reland [clang] Disable autoupgrading debug info in ThinLTO builds
@@ -251,7 +250,7 @@ let
       # Allow building against system libraries in official builds
       sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py
 
-    '' + lib.optionalString stdenv.isAarch64 ''
+    '' + lib.optionalString (stdenv.hostPlatform == stdenv.buildPlatform && stdenv.hostPlatform.isAarch64) ''
       substituteInPlace build/toolchain/linux/BUILD.gn \
         --replace 'toolprefix = "aarch64-linux-gnu-"' 'toolprefix = ""'
     '' + lib.optionalString ungoogled ''
@@ -291,7 +290,6 @@ let
 
       # Optional features:
       use_gio = true;
-      use_gnome_keyring = false; # Superseded by libsecret
       use_cups = cupsSupport;
 
       # Feature overrides:
@@ -305,11 +303,17 @@ let
       rtc_use_pipewire = true;
       # Disable PGO because the profile data requires a newer compiler version (LLVM 14 isn't sufficient):
       chrome_pgo_phase = 0;
-      clang_base_path = "${llvmPackages.clang}";
+      clang_base_path = "${llvmPackages.stdenv.cc}";
       use_qt = false;
       # To fix the build as we don't provide libffi_pic.a
       # (ld.lld: error: unable to find library -l:libffi_pic.a):
       use_system_libffi = true;
+      # Use nixpkgs Rust compiler instead of the one shipped by Chromium.
+      # We do intentionally not set rustc_version as nixpkgs will never do incremental
+      # rebuilds, thus leaving this empty is fine.
+      rust_sysroot_absolute = "${rustc}";
+      # Building with rust is disabled for now - this matches the flags in other major distributions.
+      enable_rust = false;
     } // lib.optionalAttrs proprietaryCodecs {
       # enable support for the H.264 codec
       proprietary_codecs = true;
@@ -371,7 +375,12 @@ let
         gn = gnChromium;
       };
     };
-  };
+  }
+  # overwrite `version` with the exact same `version` from the same source,
+  # except it internally points to `upstream-info.nix` for
+  # `builtins.unsafeGetAttrPos`, which is used by ofborg to decide
+  # which maintainers need to be pinged.
+  // builtins.removeAttrs upstream-info (builtins.filter (e: e != "version") (builtins.attrNames upstream-info));
 
 # Remove some extraAttrs we supplied to the base attributes already.
 in stdenv.mkDerivation (base // removeAttrs extraAttrs [

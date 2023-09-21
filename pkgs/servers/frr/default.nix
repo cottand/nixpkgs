@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , fetchFromGitHub
+, fetchpatch
 
 # build time
 , autoreconfHook
@@ -32,13 +33,13 @@
 
 stdenv.mkDerivation rec {
   pname = "frr";
-  version = "8.5.1";
+  version = "8.5.3";
 
   src = fetchFromGitHub {
     owner = "FRRouting";
     repo = pname;
     rev = "${pname}-${version}";
-    hash = "sha256-dK6eVYj9OIVChnR90FDTB7ow93nLLNRaOG8YEXxh8UQ=";
+    hash = "sha256-icqZ4a0q4tzgW5O4QEpxzRfVo+UGBL15310DdBnVPF4=";
   };
 
   nativeBuildInputs = [
