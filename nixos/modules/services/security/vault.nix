@@ -34,7 +34,8 @@ let
 
   allConfigPaths = [configFile] ++ cfg.extraSettingsPaths;
   configOptions = escapeShellArgs
-    (lib.optional cfg.dev "-dev" ++
+    (cfg.extraArguments ++
+     lib.optional cfg.dev "-dev" ++
      lib.optional (cfg.dev && cfg.devRootTokenID != null) "-dev-root-token-id=${cfg.devRootTokenID}"
       ++ (concatMap (p: ["-config" p]) allConfigPaths));
 
@@ -131,6 +132,12 @@ in
         type = types.lines;
         default = "";
         description = lib.mdDoc "Extra text appended to {file}`vault.hcl`.";
+      };
+
+      extraArguments = mkOption {
+        type = types.str;
+        default = "";
+        description = lib.mdDoc "Extra text appended to the arguments of the vault binary";
       };
 
       extraSettingsPaths = mkOption {
